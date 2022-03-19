@@ -83,7 +83,7 @@ module.exports = {
 	},
 
 	async init() {
-		frappe.isServer = false;
+		frappe.isServer = true;
 		frappe.init();
 		frappe.registerModels(frappeModels, 'server');
 		frappe.registerLibs(common);

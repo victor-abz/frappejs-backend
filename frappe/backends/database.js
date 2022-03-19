@@ -30,14 +30,14 @@ module.exports = class Database extends Observable {
 			let baseDoctype = meta.getBaseDocType();
 			if (!meta.isSingle) {
 				if (await this.tableExists(baseDoctype)) {
-					console.log(
-						'--->>>>> ALtering table for doctype: ' + baseDoctype
-					);
+					// console.log(
+					// 	'--->>>>> ALtering table for doctype: ' + baseDoctype
+					// );
 					await this.alterTable(baseDoctype);
 				} else {
-					console.log(
-						'--->>>>> CReating table for doctype: ' + baseDoctype
-					);
+					// console.log(
+					// 	'--->>>>> CReating table for doctype: ' + baseDoctype
+					// );
 					await this.createTable(baseDoctype);
 				}
 			}
@@ -71,6 +71,7 @@ module.exports = class Database extends Observable {
 			if (meta.fields.every((df) => df.default == null)) {
 				continue;
 			}
+			console.log('????????', meta);
 			let defaultValues = meta.fields.reduce((doc, df) => {
 				if (df.default != null) {
 					doc[df.fieldname] = df.default;
@@ -130,7 +131,6 @@ module.exports = class Database extends Observable {
 		// get columns
 		let diff = await this.getColumnDiff(doctype);
 		let newForeignKeys = await this.getNewForeignKeys(doctype);
-		console.log(newForeignKeys);
 
 		return this.knex.schema
 			.table(doctype, (table) => {
