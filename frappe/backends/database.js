@@ -16,7 +16,7 @@ module.exports = class Database extends Observable {
 		this.knex.on('query-error', (error) => {
 			error.type = this.getError(error);
 		});
-		this.executePostDbConnect();
+		// this.executePostDbConnect();
 	}
 
 	close() {
@@ -30,8 +30,14 @@ module.exports = class Database extends Observable {
 			let baseDoctype = meta.getBaseDocType();
 			if (!meta.isSingle) {
 				if (await this.tableExists(baseDoctype)) {
+					console.log(
+						'--->>>>> ALtering table for doctype: ' + baseDoctype
+					);
 					await this.alterTable(baseDoctype);
 				} else {
+					console.log(
+						'--->>>>> CReating table for doctype: ' + baseDoctype
+					);
 					await this.createTable(baseDoctype);
 				}
 			}
@@ -44,9 +50,9 @@ module.exports = class Database extends Observable {
 		let singleDoctypes = frappe
 			.getModels((model) => model.isSingle)
 			.map((model) => model.name);
-
 		for (let doctype of singleDoctypes) {
 			if (await this.singleExists(doctype)) {
+				console.log('<>>>>><<><><><><><>>');
 				const singleValues = await this.getSingleFieldsToInsert(
 					doctype
 				);
@@ -124,6 +130,7 @@ module.exports = class Database extends Observable {
 		// get columns
 		let diff = await this.getColumnDiff(doctype);
 		let newForeignKeys = await this.getNewForeignKeys(doctype);
+		console.log(newForeignKeys);
 
 		return this.knex.schema
 			.table(doctype, (table) => {

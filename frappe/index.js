@@ -6,7 +6,6 @@ const {
 	DEFAULT_INTERNAL_PRECISION,
 	DEFAULT_DISPLAY_PRECISION,
 } = require('./utils/consts');
-// const { markRaw } = require('vue');
 
 module.exports = {
 	initializeAndRegister(customModels = {}, force = false) {
@@ -20,6 +19,8 @@ module.exports = {
 
 	async initializeMoneyMaker(currency) {
 		currency ??= 'XXX';
+
+		console.log('***********', 'frappe');
 
 		// to be called after db initialization
 		const values =

@@ -1,6 +1,7 @@
 const backends = {};
 backends.sqlite = require('frappe/backends/sqlite');
-//backends.mysql = require('frappe/backends/mysql');
+backends.mysql = require('frappe/backends/mysql');
+backends.pg = require('frappe/backends/postgres');
 // const path = require('path');
 const express = require('express');
 const cors = require('cors');
@@ -9,7 +10,7 @@ const app = express();
 const server = require('http').Server(app);
 // const io = new require('socket.io').Server(server);
 const frappe = require('frappe');
-// const restAPI = require('./restAPI');
+const restAPI = require('./restAPI');
 const frappeModels = require('frappe/models');
 const common = require('frappe/common');
 const bodyParser = require('body-parser');
@@ -59,8 +60,8 @@ module.exports = {
 		// io.on('connection', function (socket) {
 		// 	frappe.db.bindSocketServer(socket);
 		// });
-		// // routes
-		// restAPI.setup(app);
+		// routes
+		restAPI.setup(app);
 
 		// if (process.env.NODE_ENV === 'development') {
 		// 	// webpack dev server
@@ -75,14 +76,14 @@ module.exports = {
 			console.log(`frappe server running on http://localhost:${3000}`);
 		});
 
-		// frappe.app = app;
-		// frappe.server = server;
+		frappe.app = app;
+		frappe.server = server;
 
 		// setRouteForPDF();
 	},
 
 	async init() {
-		frappe.isServer = true;
+		frappe.isServer = false;
 		frappe.init();
 		frappe.registerModels(frappeModels, 'server');
 		frappe.registerLibs(common);

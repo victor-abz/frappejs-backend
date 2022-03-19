@@ -2,8 +2,13 @@ require('module-alias/register');
 const server = require('./server');
 
 server.start({
-	backend: 'sqlite',
+	backend: 'pg',
 	connectionParams: {
-		db_path: 'test.db',
+		// db_path: 'test.db',
+		db_name: 'frappe_db',
+		username: 'victor',
+		password: '123456',
+		host: 'localhost',
+		client: 'pg',
 	},
 });
