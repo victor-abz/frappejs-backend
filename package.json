@@ -48,6 +48,14 @@
     "trailingComma": "es5"
   },
   "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victor-abz/frappejs-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/victor-abz/frappejs-backend/issues"
+  },
+  "homepage": "https://github.com/victor-abz/frappejs-backend#readme",
   "engineStrict": true,
   "author": "ABIZEYIMANA Victor",
   "license": "ISC"
