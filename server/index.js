@@ -1,3 +1,6 @@
+require('dotenv').config();
+
+console.log(process.env.PORT);
 const backends = {};
 backends.sqlite = require('frappe-backend/backends/sqlite');
 backends.mysql = require('frappe-backend/backends/mysql');
@@ -14,10 +17,8 @@ const restAPI = require('./restAPI');
 const frappeModels = require('frappe-backend/models');
 const common = require('frappe-backend/common');
 const bodyParser = require('body-parser');
-const fs = require('fs');
-// const { setupExpressRoute: setRouteForPDF } = require('frappe-backend/server/pdf');
 const morgan = require('morgan');
-const { getAppConfig, resolveAppDir } = require('../webpack/utils');
+const { getAppConfig } = require('../webpack/utils');
 
 frappe.conf = getAppConfig();
 
@@ -52,11 +53,6 @@ module.exports = {
     });
     // routes
     restAPI.setup(app);
-
-    // if (process.env.NODE_ENV === 'development') {
-    // 	// webpack dev server
-    // 	addWebpackMiddleware(app);
-    // }
 
     frappe.config.port = frappe.conf.dev.devServerPort;
 
