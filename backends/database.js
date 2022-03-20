@@ -2,6 +2,11 @@ const frappe = require('frappe-backend');
 const Observable = require('frappe-backend/utils/observable');
 const CacheManager = require('frappe-backend/utils/cacheManager');
 const Knex = require('knex');
+const { getMoneyMaker } = require('pesa');
+const {
+  DEFAULT_INTERNAL_PRECISION,
+  DEFAULT_DISPLAY_PRECISION,
+} = require('../utils/consts');
 
 module.exports = class Database extends Observable {
   constructor() {
@@ -16,7 +21,7 @@ module.exports = class Database extends Observable {
     this.knex.on('query-error', (error) => {
       error.type = this.getError(error);
     });
-    // this.executePostDbConnect();
+    this.executePostDbConnect();
   }
 
   close() {
@@ -829,7 +834,49 @@ module.exports = class Database extends Observable {
     this.typeMap = {};
   }
 
-  executePostDbConnect() {
-    frappe.initializeMoneyMaker();
+  async executePostDbConnect(currency) {
+    currency ??= 'XXX';
+
+    // to be called after db initialization
+    const values =
+      (await frappe.db?.getSingleValues(
+        {
+          fieldname: 'internalPrecision',
+          parent: 'SystemSettings',
+        },
+        {
+          fieldname: 'displayPrecision',
+          parent: 'SystemSettings',
+        }
+      )) ?? [];
+
+    let { internalPrecision: precision, displayPrecision: display } =
+      values.reduce((acc, { fieldname, value }) => {
+        acc[fieldname] = value;
+        return acc;
+      }, {});
+
+    if (typeof precision === 'undefined') {
+      precision = DEFAULT_INTERNAL_PRECISION;
+    }
+
+    if (typeof precision === 'string') {
+      precision = parseInt(precision);
+    }
+
+    if (typeof display === 'undefined') {
+      display = DEFAULT_DISPLAY_PRECISION;
+    }
+
+    if (typeof display === 'string') {
+      display = parseInt(display);
+    }
+
+    this.pesa = getMoneyMaker({
+      currency,
+      precision,
+      display,
+      //   wrapper: markRaw,
+    });
   }
 };
