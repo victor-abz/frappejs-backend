@@ -4,7 +4,7 @@ const chalk = require('chalk');
 const defaultsDeep = require('lodash/defaultsDeep');
 const logger = require('./logger');
 
-const frappeConf = 'frappe.conf.js';
+const frappeConf = 'frappe-backend.conf.js';
 
 function getAppDir() {
 	let dir = process.cwd();

@@ -1,8 +1,8 @@
 {
-	"name": "frappe-as-backend",
-	"version": "1.0.0",
+	"name": "frappe-backend",
+	"version": "1.0.1",
 	"description": "",
-	"main": "app.js",
+	"main": "index.js",
 	"dependencies": {
 		"body-parser": "^1.19.2",
 		"cors": "^2.8.5",
@@ -34,9 +34,6 @@
 		"dev": "babel-node app.js"
 	},
 	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"_moduleAliases": {
-		"frappe": "frappe/"
-	}
+	"author": "ABIZEYIMANA Victor",
+	"license": "ISC"
 }

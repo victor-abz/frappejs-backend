@@ -1,9 +1,9 @@
-const frappe = require('frappe');
+const frappe = require('frappe-backend');
 const fs = require('fs');
 const path = require('path');
-const { getTmpDir } = require('frappe/server/utils');
-const { getHTML } = require('frappe/common/print');
-const { getRandomString } = require('frappe/utils');
+const { getTmpDir } = require('frappe-backend/server/utils');
+const { getHTML } = require('frappe-backend/common/print');
+const { getRandomString } = require('frappe-backend/utils');
 
 async function makePDF(html, filePath) {
 	const puppeteer = require('puppeteer-core');

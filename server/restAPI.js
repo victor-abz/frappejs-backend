@@ -1,4 +1,4 @@
-const frappe = require('frappe');
+const frappe = require('frappe-backend');
 const path = require('path');
 const multer = require('multer');
 
