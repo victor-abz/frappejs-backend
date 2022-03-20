@@ -9,10 +9,7 @@ So, I love the simplicity of frappejs, and the Schema defined in the frappe fram
 
 ## Features
 
-- Rapid Application Development
-- Single Page App
-- Forms and Controls
-- REST-API
+- Rapid REST-API Development
 - Database backends
 
 ## Documentation
