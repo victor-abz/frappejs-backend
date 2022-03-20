@@ -1,6 +1,4 @@
 require('dotenv').config();
-
-console.log(process.env.PORT);
 const backends = {};
 backends.sqlite = require('frappe-backend/backends/sqlite');
 backends.mysql = require('frappe-backend/backends/mysql');
