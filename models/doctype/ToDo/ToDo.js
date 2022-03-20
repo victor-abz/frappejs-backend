@@ -1,5 +1,4 @@
-const { indicators } = require('../../../utils/indicators');
-const { BLUE, GREEN } = indicators;
+const { BLUE, GREEN } = require('../../../utils/indicators');
 const { t } = require('frappe-backend');
 
 module.exports = {

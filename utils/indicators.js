@@ -1,4 +1,4 @@
-export const indicators = {
+module.exports = {
 	GRAY: 'grey',
 	GREY: 'grey',
 	BLUE: 'blue',
