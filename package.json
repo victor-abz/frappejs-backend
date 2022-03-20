@@ -1,39 +1,50 @@
 {
-	"name": "frappe-backend",
-	"version": "1.0.1",
-	"description": "",
-	"main": "index.js",
-	"dependencies": {
-		"body-parser": "^1.19.2",
-		"cors": "^2.8.5",
-		"express": "^4.17.3",
-		"knex": "^0.95.15",
-		"lodash": "^4.17.21",
-		"luxon": "^2.3.1",
-		"module-alias": "^2.2.2",
-		"morgan": "^1.10.0",
-		"multer": "^1.4.4",
-		"mysql": "^2.18.1",
-		"pesa": "^1.1.11",
-		"pg": "^8.7.3",
-		"socket.io": "^4.4.1",
-		"sqlite3": "^5.0.2",
-		"webpack": "^5.70.0",
-		"webpack-dev-server": "^4.7.4",
-		"webpack-hot-middleware": "^2.25.1"
-	},
-	"devDependencies": {
-		"@babel/cli": "^7.17.6",
-		"@babel/core": "^7.17.7",
-		"@babel/node": "^7.16.8",
-		"@babel/preset-env": "^7.16.11",
-		"chalk": "^4.1.2"
-	},
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "babel-node app.js"
-	},
-	"keywords": [],
-	"author": "ABIZEYIMANA Victor",
-	"license": "ISC"
+  "name": "frappe-backend",
+  "version": "1.0.1",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "knex": "^0.95.15",
+    "lodash": "^4.17.21",
+    "luxon": "^2.3.1",
+    "module-alias": "^2.2.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.4",
+    "mysql": "^2.18.1",
+    "pesa": "^1.1.11",
+    "pg": "^8.7.3",
+    "socket.io": "^4.4.1",
+    "sqlite3": "^5.0.2",
+    "webpack": "^5.70.0",
+    "webpack-dev-server": "^4.7.4",
+    "webpack-hot-middleware": "^2.25.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.7",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "chalk": "^4.1.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
+  "engines": {
+    "node": ">=16.4.0"
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "keywords": [],
+  "engineStrict": true,
+  "author": "ABIZEYIMANA Victor",
+  "license": "ISC"
 }
