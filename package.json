@@ -1,10 +1,10 @@
 {
   "name": "frappe-backend",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "",
   "main": "index.js",
   "bin": {
-    "fbackend": "cli.js"
+    "frappe-backend": "cli.js"
   },
   "dependencies": {
     "body-parser": "^1.19.2",
