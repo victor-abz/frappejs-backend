@@ -41,7 +41,6 @@ To start the server add this to your `package.json`
 
 ```js
 const server = require('frappe-backend/server');
-const models = require('./models'); // Import Models created by CLI
 
 console.log(process.env.PORT);
 server.start({
@@ -54,7 +53,6 @@ server.start({
     client: 'pg', // Database client. options are [pg]
   },
   enableCORS: true,
-  models, // this will contain your database models
 });
 ```
 
@@ -76,7 +74,7 @@ module.exports = {
 
 ### To Generate your first Model(model is like database table). Example ToDo:
 
-Now run  `npm run new_model ToDo`
+Now run `npm run new_model ToDo`
 This will create a new model in `models/doctype` called ToDo
 it will include a name field which represent the ID of each record. Go ahead and add the following fields under fields.:
 [Read this to Understand more about models](docs/models/index.md)
@@ -145,6 +143,27 @@ module.exports = {
     },
   ],
 };
+```
+
+Import models folder in your entry file
+
+```js
+const server = require('frappe-backend/server');
+const models = require('./models'); // Import Models folder
+
+console.log(process.env.PORT);
+server.start({
+  backend: 'pg', // To start a postgres backend.
+  connectionParams: {
+    db_name: process.env.DB_NAME, // Existing postgres database name
+    username: process.env.DB_USERNAME, // Database username
+    password: process.env.DB_PWD, // Database password
+    host: process.env.DB_HOST, // Database host
+    client: 'pg', // Database client. options are [pg]
+  },
+  enableCORS: true,
+  models, // Your Import
+});
 ```
 
 ### Start Server
