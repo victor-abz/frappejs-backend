@@ -7,8 +7,7 @@ module.exports = {
       fs.mkdirSync('./models');
       fs.writeFileSync(
         './models/index.js',
-        `'module.exports = {
-		  
+        `module.exports = {
 	  };`
       );
     }
