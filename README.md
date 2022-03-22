@@ -12,9 +12,158 @@ So, I love the simplicity of frappejs, and the Schema defined in the frappe fram
 - Rapid REST-API Development
 - Database backends
 
+## Quick Started
+
+### Initialize a new NodeJS project
+
+`mkdir fback-demo`
+`npm init -y`
+
+### Install Frappe Backend
+
+`npm i frappe-backend`
+
+### To Generate your first Model(model is like database table). Example ToDo:
+
+Run:
+`frp new_model ToDo`
+This will create a new model in `models/doctype` called ToDo
+it will include a name field which represent the ID of each record. Go ahead and add the following fields under fields.:
+[Read this to Understand more about models](docs/models/index.md)
+
+```js
+{
+	fieldname: 'subject',
+	label: t`Subject`,
+	placeholder: 'Subject',
+	fieldtype: 'Data',
+	required: 1,
+},
+{
+	fieldname: 'status',
+	label: t`Status`,
+	fieldtype: 'Select',
+	options: ['Open', 'Closed'],
+	default: 'Open',
+	required: 1,
+},
+{
+	fieldname: 'description',
+	label: t`Description`,
+	fieldtype: 'Text',
+},
+```
+
+Your ToDo.js Model should like this now:
+
+```js
+module.exports = {
+  name: 'ToDo',
+  label: 'ToDo',
+  naming: 'name', // {random|autoincrement}
+  isSingle: 0,
+  isChild: 0,
+  isSubmittable: 0,
+  settings: null,
+  keywordFields: [],
+  fields: [
+    {
+      fieldname: 'name',
+      label: 'Name',
+      fieldtype: 'Data',
+      required: 1,
+    },
+    {
+      fieldname: 'subject',
+      label: t`Subject`,
+      placeholder: 'Subject',
+      fieldtype: 'Data',
+      required: 1,
+    },
+    {
+      fieldname: 'status',
+      label: t`Status`,
+      fieldtype: 'Select',
+      options: ['Open', 'Closed'],
+      default: 'Open',
+      required: 1,
+    },
+    {
+      fieldname: 'description',
+      label: t`Description`,
+      fieldtype: 'Text',
+    },
+  ],
+};
+```
+
+### Create app Entry file for your project. e.g app.js and backend config file
+
+```js
+const server = require('frappe-backend/server');
+const models = require('./models'); // Import Models created by CLI
+
+console.log(process.env.PORT);
+server.start({
+  backend: 'pg', // To start a postgres backend.
+  connectionParams: {
+    db_name: process.env.DB_NAME, // Existing postgres database name
+    username: process.env.DB_USERNAME, // Database username
+    password: process.env.DB_PWD, // Database password
+    host: process.env.DB_HOST, // Database host
+    client: 'pg', // Database client. options are [pg]
+  },
+  enableCORS: true,
+  models, // this will contain your database models
+});
+```
+
+Create `frappe-backend.conf.js` file at the root directory of your project. Minimum config look like:
+
+```js
+module.exports = {
+  dev: {
+    devServerPort: process.env.PORT || 3000,
+    devServerHost: 'localhost',
+  },
+  node: {
+    paths: {
+      main: 'app.js',
+    },
+  },
+};
+```
+
+### Start Server
+
+To start the server add this to your `package.json`
+
+```bash
+{
+  ...
+  "scripts": {
+    "start": "frp start"
+  }
+  ...
+}
+```
+
+now run your server with `npm run start`. Your NodeJs Server will start at specified port.
+Go to your Postman and you should be able to consume RestAPI to your ToDo model.
+[check this RestAPI Documentation](docs/server/rest.md)
+
 ## Documentation
 
 [Read the full docs](docs/index.md)
+
+## ToDo
+
+[] Integrate various type of Authentication
+[] Convert Package to ES6 and Typescript
+
+## Contribution
+
+You are welcome to contibute. Just raise the PR.
 
 ## License
 
