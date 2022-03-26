@@ -67,6 +67,12 @@ module.exports = {
     frappe.app = app;
     frappe.server = server;
 
+    // Handle Not found routes
+    app.use(function (req, res, next) {
+      res.status(404);
+      // respond with json
+      return res.json({ error: 'Url Not found' });
+    });
     // setRouteForPDF();
   },
 
