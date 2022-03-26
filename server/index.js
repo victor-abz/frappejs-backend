@@ -52,7 +52,7 @@ module.exports = {
     // Add Custom Routes
     routes?.setup?.(app);
 
-    // Deafult Models Routes routes
+    // Deafult Models Routes
     restAPI.setup(app);
 
     frappe.config.port = frappe.conf.dev.devServerPort;
