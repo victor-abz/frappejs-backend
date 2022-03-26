@@ -178,8 +178,10 @@ Go to your Postman and you should be able to consume RestAPI to your ToDo model.
 
 ## ToDo
 
-[] Integrate various type of Authentication
-[] Convert Package to ES6 and Typescript
+- [x] Allow custom Routes and overriding
+- [ ] Pass custom Middleware to routes
+- [ ] Integrate various type of Authentication
+- [ ] Convert Package to ES6 and Typescript
 
 ## Contribution
 

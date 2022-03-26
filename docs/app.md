@@ -18,6 +18,8 @@ module.exports = {
     devServerPort: process.env.PORT || 3000,
     devServerHost: 'localhost',
   },
+  baseDir: '.', // If you want the model codes to be in another folder such as src
+  useEs6: true, // If you want to generate models in ES6 Format
   node: {
     paths: {
       main: 'app.js',

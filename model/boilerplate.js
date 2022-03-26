@@ -60,21 +60,47 @@ module.exports = {
     // };.
     fs.readFile(`${baseDir}/models/index.js`, 'utf8', (err, data) => {
       if (err) throw err;
-      //  If line ${name}: require('./doctype/${name}/${name}.js'),`  exist return
-      if (data.includes(`${name}: require('./doctype/${name}/${name}.js'),`))
-        return;
-      const result = data.replace(
-        /module.exports = {/,
-        `module.exports = {
-	${name}: require('./doctype/${name}/${name}.js'),`
-      );
-      fs.writeFile(`${baseDir}/models/index.js`, result, 'utf8', (err) => {
-        if (err) console.log(err);
-        success = logger('Creating Models:', 'green');
-        success(
-          `Rura model files created in ${baseDir}/models/doctype/${name}/${name}.js!`
+
+      // If not use Es6
+      if (!appConfig.useEs6) {
+        if (data.includes(importString)) return;
+        const result = data.replace(
+          'module.exports = {',
+          `module.exports = {
+${name}: require('./doctype/${name}/${name}.js'),`
         );
-      });
+
+        fs.writeFile(`${baseDir}/models/index.js`, result, 'utf8', (err) => {
+          if (err) console.log(err);
+          success = logger('Creating Models:', 'green');
+          success(
+            `Rura model files created in ${baseDir}/models/doctype/${name}/${name}.js!`
+          );
+        });
+      } else {
+        //   Import the model in the index.js file using ES6 syntax and export it
+        //   Example of the file:
+        //   import ${name} from './doctype/${name}/${name}.js';
+        //   export default {
+        // 		${name},
+        // };
+        if (data.includes(importString)) return;
+        const result = data.replace(
+          'export default {',
+          `import ${name} from './doctype/${name}/${name}.js';
+			
+export default {
+	${name},`
+        );
+
+        fs.writeFile(`${baseDir}/models/index.js`, result, 'utf8', (err) => {
+          if (err) console.log(err);
+          success = logger('Creating Models:', 'green');
+          success(
+            `Rura model files created in ${baseDir}/models/doctype/${name}/${name}.js!`
+          );
+        });
+      }
     });
   },
 };

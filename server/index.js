@@ -21,7 +21,7 @@ const { getAppConfig } = require('../webpack/utils');
 frappe.conf = getAppConfig();
 
 module.exports = {
-  async start({ backend, connectionParams, models }) {
+  async start({ backend, connectionParams, models, routes }) {
     await this.init();
 
     if (models) {
@@ -46,10 +46,13 @@ module.exports = {
 
     // socketio
     io.on('connection', function (socket) {
-      console.log('???<<< SOCKET Connection >>>>??');
       frappe.db.bindSocketServer(socket);
     });
-    // routes
+
+    // Add Custom Routes
+    routes?.setup?.(app);
+
+    // Deafult Models Routes routes
     restAPI.setup(app);
 
     frappe.config.port = frappe.conf.dev.devServerPort;

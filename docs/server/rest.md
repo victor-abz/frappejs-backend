@@ -1,6 +1,9 @@
 # REST API
 
-You can directly access documents at `/api/resource/:doctype`
+## Default CRUD Rest API for Models
+
+You can directly access documents at `/api/resource/:doctype`.
+For Overriding these default routes, check below section **Creating Custom Routes**
 
 ### Create
 
@@ -77,3 +80,47 @@ Response:
   }
 ]
 ```
+
+## Creating Custom Routes
+
+To create your own routes, pass argument `routes` to `server.start` function in your entry file.
+
+Routes should be an object like this
+
+```js
+// ./src/routes/index.js
+import { customRoutes } from './customRoutes';
+export default {
+  setup(app) {
+    customRoutes(app);
+  },
+};
+```
+
+Import this route files to your entry file like:
+
+```js
+// ....
+import routes from './routes'; // Import Custom Routes
+
+server.start({
+  // ... Other values
+  routes,
+  // ... other values
+});
+```
+
+Then in your custom routes file you can create any nodejs route.
+
+Example:
+
+```js
+// ./src/routes/customRoutes.js
+export const customRoutes = (app) => {
+  app.get('/hello', (req, res) => {
+    res.send('hello world');
+  });
+};
+```
+
+**Note:** You are Able to override any default above with the custom routes
