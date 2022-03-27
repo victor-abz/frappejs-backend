@@ -18,8 +18,12 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const { getAppConfig } = require('../starter/utils');
 const { executeMiddlewareList } = require('frappe-backend/server/utils');
+const logger = require('../starter/logger');
 
 frappe.conf = getAppConfig();
+
+const log = logger('frappe-server: ');
+const warn = logger('frappe-server', 'red');
 
 module.exports = {
   async start({
@@ -71,9 +75,8 @@ module.exports = {
 
     // listen
     server.listen(frappe.config.port, () => {
-      console.log(
-        `frappe server running on http://localhost:${frappe.config.port}`
-      );
+      log();
+      log(`Running on http://localhost:${frappe.config.port}`);
     });
 
     frappe.app = app;

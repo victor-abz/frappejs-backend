@@ -41,8 +41,31 @@ function resolveAppDir(...args) {
   return path.resolve(getAppDir(), ...args);
 }
 
+function isValidJS(fileName) {
+  fileName = fileName.endsWith('.js') ? fileName : fileName + '.js';
+
+  return fs.existsSync('./' + fileName);
+}
+
+function debounce(func, delay) {
+  let debounceTimer;
+
+  return function () {
+    let context = this;
+    let args = arguments;
+
+    clearTimeout(debounceTimer);
+
+    debounceTimer = setTimeout(() => {
+      func.apply(context, args);
+    }, delay);
+  };
+}
+
 module.exports = {
   getAppDir,
   getAppConfig,
   resolveAppDir,
+  isValidJS,
+  debounce,
 };
