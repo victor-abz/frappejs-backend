@@ -16,7 +16,7 @@ So, I love the simplicity of frappejs, and the Schema defined in the frappe fram
 
 ---
 
-> You can quickly get started with [Typescript BoilerPlate](https://github.com/victor-abz/frappe-backend-typescript-bolierplate)
+> You can quickly get started with [Typescript BoilerPlate](https://github.com/victor-abz/frappe-backend-typescript-boilerplate)
 
 ---
 
