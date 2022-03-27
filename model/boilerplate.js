@@ -14,28 +14,59 @@ module.exports = {
       ? `import ${name} from './doctype/${name}/${name}.js'`
       : `${name}: require('./doctype/${name}/${name}.js'),`;
 
-    //  Check if file `./models/doctype/${name}/${name}.js`  exists and return
-    if (fs.existsSync(`${baseDir}/models/doctype/${name}/${name}.js`)) return;
     // check if models folder exist, if not create it and add an index file with empty module exports
     if (!fs.existsSync(`${baseDir}/models`)) {
       fs.mkdirSync(`${baseDir}/models`);
       fs.writeFileSync(
         `${baseDir}/models/index.js`,
         `module.exports = {
-	  };`
+			};`
       );
     }
+    //  Check if file `./models/doctype/${name}/${name}.js`  exists and return
+    if (fs.existsSync(`${baseDir}/models/doctype/${name}/${name}.js`)) return;
+
     // Create DOctype Folder
     fs.mkdirSync(
       `${baseDir}/models/doctype/${name}`,
       { recursive: true },
       (err) => console.log(err)
     );
+
+    // Create Document template
+    if (
+      !fs.existsSync(`${baseDir}/models/doctype/${name}/${name}Document.js`)
+    ) {
+      const importBase = appConfig.useEs6
+        ? `import BaseDocument from 'frappe-backend/model/document';`
+        : `const BaseDocument = require('frappe-backend/model/document');`;
+      const exportDocument = appConfig.useEs6
+        ? `export default class ${name} extends BaseDocument {`
+        : `module.exports = class ${name} extends BaseDocument {`;
+
+      fs.writeFileSync(
+        `${baseDir}/models/doctype/${name}/${name}Document.js`,
+        `${importBase}
+${exportDocument}
+	// validate() {
+	// 	console.log('Validating');
+	// }
+}`
+      );
+    }
+
     fs.writeFileSync(
       `${baseDir}/models/doctype/${name}/${name}.js`,
-      `${exportString} 
+      `
+	  ${
+      appConfig.useEs6
+        ? `import ${name} from './${name}Document';
+${exportString}`
+        : `${exportString}`
+    }
     name: "${name}",
     label: "${name}",
+	documentClass: ${appConfig.useEs6 ? name : `require('./${name}.js')`},
     naming: "name", // {random|autoincrement}
     isSingle: 0,
     isChild: 0,
@@ -74,7 +105,7 @@ ${name}: require('./doctype/${name}/${name}.js'),`
           if (err) console.log(err);
           success = logger('Creating Models:', 'green');
           success(
-            `Rura model files created in ${baseDir}/models/doctype/${name}/${name}.js!`
+            `Model files created in ${baseDir}/models/doctype/${name}/${name}.js!`
           );
         });
       } else {
@@ -88,7 +119,7 @@ ${name}: require('./doctype/${name}/${name}.js'),`
         const result = data.replace(
           'export default {',
           `import ${name} from './doctype/${name}/${name}.js';
-			
+	
 export default {
 	${name},`
         );
@@ -97,7 +128,7 @@ export default {
           if (err) console.log(err);
           success = logger('Creating Models:', 'green');
           success(
-            `Rura model files created in ${baseDir}/models/doctype/${name}/${name}.js!`
+            `Model files created in ${baseDir}/models/doctype/${name}/${name}.js!`
           );
         });
       }

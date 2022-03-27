@@ -59,7 +59,9 @@ module.exports = class NodeWatcher {
   };
 
   reload = () => {
-    this.log(`starting ${this.appConfig.nodemon.exec}`);
+    this.log(
+      `starting ${this.appConfig.nodemon.exec} ${this.appConfig.nodemon.entry}`
+    );
     if (this.nodeServer) this.nodeServer.kill('SIGTERM');
 
     this.nodeServer = spawn(
