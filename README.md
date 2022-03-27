@@ -39,7 +39,8 @@ To start the server add this to your `package.json`
   ...
   "scripts": {
 	"new-model": "frp-cmd new-model",
-    "start": "frp-cmd start"
+    "start": "frp-cmd start",
+	"dev": "frp-cmd start dev"
   }
   ...
 }
@@ -60,6 +61,9 @@ server.start({
     client: 'pg', // Database client. options are [pg]
   },
   enableCORS: true,
+  //   models, // this will contain your database models
+  // 	routes,
+  // 	middlewareList: [testMid(124), testMid(5)],
 });
 ```
 
@@ -77,6 +81,14 @@ module.exports = {
     paths: {
       main: 'app.js',
     },
+  },
+  nodemon: {
+    // To be able to run the development server
+    watch: ['.'],
+    ext: '.ts,.js',
+    ignore: [],
+    exec: 'ts-node',
+    entry: './src/app.ts',
   },
 };
 ```

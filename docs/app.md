@@ -25,6 +25,14 @@ module.exports = {
       main: 'app.js',
     },
   },
+  nodemon: {
+    // For Dev File Watcher
+    watch: ['src'],
+    ext: '.ts,.js',
+    ignore: [],
+    exec: 'ts-node',
+    entry: './src/app.ts',
+  },
 };
 ```
 
