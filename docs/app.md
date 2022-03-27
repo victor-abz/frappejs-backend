@@ -35,7 +35,6 @@ Assuming you have a `app.js` file in your root directory, you can start the Frap
 ```js
 const server = require('frappe-backend/server');
 
-console.log(process.env.PORT);
 server.start({
   backend: 'pg', // Start Postgres Server, Options are [sqlite, mysql]
   connectionParams: {
@@ -46,6 +45,9 @@ server.start({
     client: 'pg',
   },
   enableCORS: true,
+  // models, // Add your defined database models
+  // routes, // Add custom or ovverride routes
+  // middlewareList: [testMid(124), testMid(5)], // Add custom global middleware functions
 });
 ```
 

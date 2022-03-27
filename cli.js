@@ -13,7 +13,7 @@ program.version(package.version);
 program
   .command('start [mode]')
   .description('Start development server')
-  .action(require('./webpack/start'));
+  .action(require('./starter/start'));
 
 // create  new command new-model with mandatory argument modelName. The command should also take two options, folderName and useEs6.
 // Should call action function with the modelName and the options.

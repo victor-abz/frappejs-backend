@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const getDirName = path.dirname;
 const os = require('os');
+const async = require('async');
 
 module.exports = {
   writeFile(fullpath, contents) {
@@ -22,5 +23,19 @@ module.exports = {
 
   getTmpDir() {
     return os.tmpdir();
+  },
+
+  // Execute middleware passed to route.
+  executeMiddlewareList(middlewareList, req, res, next) {
+    async.eachSeries(
+      middlewareList,
+      function (middleware, callback) {
+        middleware.bind(null, req, res, callback)();
+      },
+      function (err) {
+        if (err) return res.status(500).json({ error: err });
+        next();
+      }
+    );
   },
 };

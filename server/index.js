@@ -16,12 +16,19 @@ const frappeModels = require('frappe-backend/models');
 const common = require('frappe-backend/common');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const { getAppConfig } = require('../webpack/utils');
+const { getAppConfig } = require('../starter/utils');
+const { executeMiddlewareList } = require('frappe-backend/server/utils');
 
 frappe.conf = getAppConfig();
 
 module.exports = {
-  async start({ backend, connectionParams, models, routes }) {
+  async start({
+    backend,
+    connectionParams,
+    models,
+    routes,
+    middlewareList = [],
+  }) {
     await this.init();
 
     if (models) {
@@ -49,11 +56,16 @@ module.exports = {
       frappe.db.bindSocketServer(socket);
     });
 
+    // global middlewares
+    app.use(function (req, res, next) {
+      executeMiddlewareList(middlewareList, req, res, next);
+    });
+
     // Add Custom Routes
     routes?.setup?.(app);
 
-    // Deafult Models Routes
-    restAPI.setup(app);
+    // Default Models Routes
+    restAPI.setup(app, middlewareList);
 
     frappe.config.port = frappe.conf.dev.devServerPort;
 
@@ -73,6 +85,7 @@ module.exports = {
       // respond with json
       return res.json({ error: 'Url Not found' });
     });
+
     // setRouteForPDF();
   },
 

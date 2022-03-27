@@ -12,7 +12,15 @@ So, I love the simplicity of frappejs, and the Schema defined in the frappe fram
 - Rapid REST-API Development
 - Database backends
 
-## Quick Started
+## Quick Start
+
+---
+
+> You can quickly get started with [Typescript BoilerPlate](https://github.com/victor-abz/frappe-backend-typescript-bolierplate)
+
+---
+
+I you like to build it on your own, follow below guide:
 
 ### Initialize a new NodeJS project
 
@@ -42,7 +50,6 @@ To start the server add this to your `package.json`
 ```js
 const server = require('frappe-backend/server');
 
-console.log(process.env.PORT);
 server.start({
   backend: 'pg', // To start a postgres backend.
   connectionParams: {
@@ -64,6 +71,8 @@ module.exports = {
     devServerPort: process.env.PORT || 3000,
     devServerHost: 'localhost',
   },
+  baseDir: '.', // If you want the model codes to be in another folder such as src
+  useEs6: true, // If you want to generate models in ES6 Format
   node: {
     paths: {
       main: 'app.js',
@@ -150,8 +159,9 @@ Import models folder in your entry file
 ```js
 const server = require('frappe-backend/server');
 const models = require('./models'); // Import Models folder
+// import routes from './routes'; // Import Custom Routes
+// import { testMid } from './middleware/sample.middleware';
 
-console.log(process.env.PORT);
 server.start({
   backend: 'pg', // To start a postgres backend.
   connectionParams: {
@@ -163,6 +173,8 @@ server.start({
   },
   enableCORS: true,
   models, // Your Import
+  // routes, // Your custom routing
+  // middlewareList: [middleWare1, middleWare2], // Pass global middleware functions
 });
 ```
 

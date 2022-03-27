@@ -1,7 +1,7 @@
 const fs = require('fs');
-const { getAppConfig } = require('../webpack/utils');
+const { getAppConfig } = require('../starter/utils');
 const appConfig = getAppConfig();
-const logger = require('../webpack/logger');
+const logger = require('../starter/logger');
 
 module.exports = {
   make_model_files(name) {
