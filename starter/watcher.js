@@ -11,8 +11,8 @@ module.exports = class NodeWatcher {
     this.__init__();
   }
   __init__ = () => {
-    this.warn = logger('frappe-watcher:', 'red');
-    this.log = logger('frappe-watcher:');
+    this.warn = logger('[frappe-watcher]', 'red');
+    this.log = logger('[frappe-watcher]');
     this.frappeConf = 'frappe-backend.conf.js';
 
     this.appConfig = getAppConfig();
@@ -82,10 +82,10 @@ module.exports = class NodeWatcher {
         ignoreInitial: true,
       })
       .on('all', (event, path) => {
-        // if (this.debounceTimer) clearTimeout(this.debounceTimer);
-        // this.debounceTimer = setTimeout(() => {
-        //   this.reload();
-        // }, 500);
+        if (this.debounceTimer) clearTimeout(this.debounceTimer);
+        this.debounceTimer = setTimeout(() => {
+          this.reload();
+        }, 500);
         this.reload();
       });
   };
@@ -113,5 +113,20 @@ module.exports = class NodeWatcher {
       this.watchPaths.push(path + '/**/*' + extension);
     });
     return path;
+  };
+
+  debounce = (func, delay) => {
+    let debounceTimer;
+
+    return function () {
+      let context = this;
+      let args = arguments;
+
+      clearTimeout(debounceTimer);
+
+      debounceTimer = setTimeout(() => {
+        func.apply(context, args);
+      }, delay);
+    };
   };
 };

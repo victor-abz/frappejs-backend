@@ -22,7 +22,7 @@ const logger = require('../starter/logger');
 
 frappe.conf = getAppConfig();
 
-const log = logger('frappe-server: ');
+const log = logger('[frappe-server]');
 const warn = logger('frappe-server', 'red');
 
 module.exports = {
