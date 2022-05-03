@@ -182,6 +182,18 @@ module.exports = {
       })
     );
 
+    // get single
+    app.get(
+      '/api/single/:doctype',
+      frappe.asyncHandler(async function (request, response) {
+        let doc = await frappe.getSingle(request.params.doctype);
+        return response.json({
+          message: `${request.params.doctype} retrieved successfully`,
+          success: true,
+          data: doc.getValidDict(),
+        });
+      })
+    );
     // Update single
     app.put(
       '/api/single/:doctype',
