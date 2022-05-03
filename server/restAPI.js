@@ -192,7 +192,7 @@ module.exports = {
         await doc.update();
         await frappe.db.commit();
         return response.json({
-          message: `${request.params.doctype} updated successfully`,
+          message: `${request.params.doctype} Updated successfully`,
           success: true,
           data: doc.getValidDict(),
         });
