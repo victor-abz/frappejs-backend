@@ -13,4 +13,5 @@ Thumbs.db
 /app/background.js
 /app/**/*.map
 .nyc_output
+package-lock.json
 coverage
