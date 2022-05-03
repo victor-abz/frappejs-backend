@@ -35,14 +35,8 @@ module.exports = class Database extends Observable {
       let baseDoctype = meta.getBaseDocType();
       if (!meta.isSingle) {
         if (await this.tableExists(baseDoctype)) {
-          // console.log(
-          // 	'--->>>>> ALtering table for doctype: ' + baseDoctype
-          // );
           await this.alterTable(baseDoctype);
         } else {
-          // console.log(
-          // 	'--->>>>> CReating table for doctype: ' + baseDoctype
-          // );
           await this.createTable(baseDoctype);
         }
       }

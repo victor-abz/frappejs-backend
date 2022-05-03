@@ -2,81 +2,90 @@
 const Database = require('./database');
 
 class PostgresDatabase extends Database {
-	constructor({ db_name, username, password, host }) {
-		super();
-		this.db_name = db_name;
-		this.username = username;
-		this.password = password;
-		this.host = host;
-		this.connectionParams = {
-			client: 'pg',
-			connection: {
-				host: this.host,
-				port: this.db_port || 5432,
-				user: this.username,
-				password: this.password,
-				database: this.db_name,
-			},
-		};
-	}
+  constructor({ db_name, username, password, host }) {
+    super();
+    this.db_name = db_name;
+    this.username = username;
+    this.password = password;
+    this.host = host;
+    this.connectionParams = {
+      client: 'pg',
+      connection: {
+        host: this.host,
+        port: this.db_port || 5432,
+        user: this.username,
+        password: this.password,
+        database: this.db_name,
+      },
+    };
+  }
 
-	async addForeignKeys(doctype, newForeignKeys) {
-		// Disble FOregn key on table with Postgres Query
-		await this.sql(`ALTER TABLE "${doctype}" DISABLE TRIGGER user`);
-		// await this.sql('BEGIN TRANSACTION');
+  async addForeignKeys(doctype, newForeignKeys) {
+    console.log({ newForeignKeys });
+    // Check foreign Table Exists. If not create it.
+    newForeignKeys.forEach(async (fk) => {
+      const foreignTableExists = await this.knex.schema.hasTable(fk.target);
+      if (!foreignTableExists) {
+        await this.createTable(fk.target);
+      }
+    });
 
-		const tempName = 'TEMP' + doctype;
+    // Disble FOregn key on table with Postgres Query
+    await this.sql(`ALTER TABLE "${doctype}" DISABLE TRIGGER user`);
+    // await this.sql('BEGIN TRANSACTION');
 
-		// create temp table
-		await this.knex.schema.dropTableIfExists(tempName);
-		await this.createTable(doctype, tempName);
+    const tempName = 'TEMP' + doctype;
 
-		// copy from old to new table
-		await this.knex(tempName).insert(this.knex.select().from(doctype));
+    // create temp table
+    await this.knex.schema.dropTableIfExists(tempName);
+    await this.createTable(doctype, tempName);
 
-		// drop old table
-		await this.knex.schema.dropTable(doctype);
+    // copy from old to new table
+    await this.knex(tempName).insert(this.knex.select().from(doctype));
 
-		// rename new table
-		await this.createTable(doctype);
-		await this.knex(doctype).insert(this.knex.select().from(tempName));
-		await this.knex.schema.dropTableIfExists(tempName);
+    // drop old table
+    await this.knex.schema.dropTable(doctype);
 
-		await this.sql('COMMIT');
-		await this.sql(`ALTER TABLE "${doctype}" ENABLE TRIGGER user`);
-	}
+    // rename new table
+    await this.createTable(doctype);
+    await this.knex(doctype).insert(this.knex.select().from(tempName));
+    await this.knex.schema.dropTableIfExists(tempName);
 
-	removeColumns() {
-		// pass
-	}
+    await this.sql('COMMIT');
+    await this.sql(`ALTER TABLE "${doctype}" ENABLE TRIGGER user`);
+  }
 
-	async getTableColumns(doctype) {
-		const rows = await this.knex
-			.select('column_name')
-			.from('information_schema.columns')
-			.where('table_name', doctype);
+  removeColumns() {
+    // pass
+  }
 
-		return rows.map((d) => d.column_name);
-	}
+  async getTableColumns(doctype) {
+    const rows = await this.knex
+      .select('column_name')
+      .from('information_schema.columns')
+      .where('table_name', doctype);
 
-	async getForeignKeys(doctype) {
-		const rows = await this.knex
-			.select('constraint_name')
-			.from('information_schema.table_constraints')
-			.where('table_name', doctype);
+    return rows.map((d) => d.column_name);
+  }
 
-		return rows.map((d) => d.constraint_name);
-	}
+  async getForeignKeys(doctype) {
+    const rows = await this.knex
+      .select('constraint_name')
+      .from('information_schema.table_constraints')
+      .where('table_name', doctype);
 
-	initTypeMap() {
-		// prettier-ignore
-		this.typeMap = {
+    return rows.map((d) => d.constraint_name);
+  }
+
+  initTypeMap() {
+    // prettier-ignore
+    this.typeMap = {
       'AutoComplete': 'text',
       'Currency': 'text',
       'Int': 'integer',
       'Float': 'float',
       'Percent': 'float',
-      'Check': 'integer',
+      'Check': 'boolean',
       'Small Text': 'text',
       'Long Text': 'text',
       'Code': 'text',
@@ -99,23 +108,23 @@ class PostgresDatabase extends Database {
       'Barcode': 'text',
       'Geolocation': 'text'
     };
-	}
+  }
 
-	// getError(err) {
-	// 	let errorType = frappe.errors.DatabaseError;
-	// 	if (err.message.includes('FOREIGN KEY')) {
-	// 		errorType = frappe.errors.LinkValidationError;
-	// 	}
-	// 	if (err.message.includes('SQLITE_ERROR: cannot commit')) {
-	// 		errorType = frappe.errors.CannotCommitError;
-	// 	}
-	// 	if (
-	// 		err.message.includes('SQLITE_CONSTRAINT: UNIQUE constraint failed:')
-	// 	) {
-	// 		errorType = frappe.errors.DuplicateEntryError;
-	// 	}
-	// 	return errorType;
-	// }
+  // getError(err) {
+  // 	let errorType = frappe.errors.DatabaseError;
+  // 	if (err.message.includes('FOREIGN KEY')) {
+  // 		errorType = frappe.errors.LinkValidationError;
+  // 	}
+  // 	if (err.message.includes('SQLITE_ERROR: cannot commit')) {
+  // 		errorType = frappe.errors.CannotCommitError;
+  // 	}
+  // 	if (
+  // 		err.message.includes('SQLITE_CONSTRAINT: UNIQUE constraint failed:')
+  // 	) {
+  // 		errorType = frappe.errors.DuplicateEntryError;
+  // 	}
+  // 	return errorType;
+  // }
 }
 
 module.exports = PostgresDatabase;
