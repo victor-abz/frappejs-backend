@@ -32,19 +32,6 @@ module.exports = {
       })
     );
 
-    // get single
-    app.get(
-      '/api/single/:doctype',
-      frappe.asyncHandler(async function (request, response) {
-        let doc = await frappe.getSingle(request.params.doctype);
-        return response.json({
-          message: `${request.params.doctype} retrieved successfully`,
-          success: true,
-          data: doc.getValidDict(),
-        });
-      })
-    );
-
     // create
     app.post(
       '/api/resource/:doctype',
@@ -191,6 +178,23 @@ module.exports = {
         return response.json({
           message: `Values retrieved successfully`,
           success: true,
+        });
+      })
+    );
+
+    // Update single
+    app.update(
+      '/api/single/:doctype',
+      frappe.asyncHandler(async function (request, response) {
+        let data = request.body;
+        let doc = await frappe.getSingle(request.params.doctype);
+        Object.assign(doc, data);
+        await doc.update();
+        await frappe.db.commit();
+        return response.json({
+          message: `${request.params.doctype} updated successfully`,
+          success: true,
+          data: doc.getValidDict(),
         });
       })
     );
