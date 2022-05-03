@@ -45,7 +45,11 @@ function asyncHandler(fn) {
     Promise.resolve(fn(req, res, next)).catch((err) => {
       console.log(err);
       // handle error
-      res.status(err.statusCode || 500).send({ error: err.message });
+      res.status(err.statusCode || 500).send({
+        message: err.message,
+        success: false,
+        error: err.message,
+      });
     });
 }
 

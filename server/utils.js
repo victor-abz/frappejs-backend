@@ -33,7 +33,10 @@ module.exports = {
         middleware.bind(null, req, res, callback)();
       },
       function (err) {
-        if (err) return res.status(500).json({ error: err });
+        if (err)
+          return res
+            .status(500)
+            .json({ message: err.message, success: false, error: err });
         next();
       }
     );

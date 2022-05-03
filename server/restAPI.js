@@ -24,7 +24,11 @@ module.exports = {
           order: request.query.order,
         });
 
-        return response.json(data);
+        return response.json({
+          message: `${request.params.doctype} data has been fetched successfully`,
+          success: true,
+          data,
+        });
       })
     );
 
@@ -37,7 +41,11 @@ module.exports = {
         let doc = frappe.newDoc(data);
         await doc.insert();
         await frappe.db.commit();
-        return response.json(doc.getValidDict());
+        return response.json({
+          message: `${request.params.doctype} created successfully`,
+          success: true,
+          data: doc.getValidDict(),
+        });
       })
     );
 
@@ -53,7 +61,11 @@ module.exports = {
         Object.assign(doc, data);
         await doc.update();
         await frappe.db.commit();
-        return response.json(doc.getValidDict());
+        return response.json({
+          message: `${request.params.doctype} updated successfully`,
+          success: true,
+          data: doc.getValidDict(),
+        });
       })
     );
 
@@ -94,7 +106,11 @@ module.exports = {
 
           await frappe.db.setValue(doctype, name, fieldname, doc.name);
 
-          fileDocs.push(doc.getValidDict());
+          fileDocs.push({
+            message: `${request.params.doctype} file uploaded successfully`,
+            success: true,
+            data: doc.getValidDict(),
+          });
         }
 
         return response.json(fileDocs);
@@ -109,7 +125,11 @@ module.exports = {
           request.params.doctype,
           request.params.name
         );
-        return response.json(doc.getValidDict());
+        return response.json({
+          message: `${name} retried successfully`,
+          success: true,
+          data: doc.getValidDict(),
+        });
       })
     );
 
@@ -122,7 +142,11 @@ module.exports = {
           request.params.name,
           request.params.fieldname
         );
-        return response.json({ value: value });
+        return response.json({
+          message: `Value retrieved successfully`,
+          success: true,
+          data: { value: value },
+        });
       })
     );
 
@@ -135,7 +159,10 @@ module.exports = {
           request.params.name
         );
         await doc.delete();
-        return response.json({});
+        return response.json({
+          message: `Value deleted successfully`,
+          success: true,
+        });
       })
     );
 
@@ -148,7 +175,10 @@ module.exports = {
           let doc = await frappe.getDoc(request.params.doctype, name);
           await doc.delete();
         }
-        return response.json({});
+        return response.json({
+          message: `Values retrieved successfully`,
+          success: true,
+        });
       })
     );
   },

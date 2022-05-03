@@ -86,7 +86,11 @@ module.exports = {
     app.use(function (req, res, next) {
       res.status(404);
       // respond with json
-      return res.json({ error: 'Url Not found' });
+      return res.json({
+        message: 'Url Not found',
+        success: false,
+        error: 'Url Not found',
+      });
     });
 
     // setRouteForPDF();
