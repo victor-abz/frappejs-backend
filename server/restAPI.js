@@ -183,7 +183,7 @@ module.exports = {
     );
 
     // Update single
-    app.update(
+    app.put(
       '/api/single/:doctype',
       frappe.asyncHandler(async function (request, response) {
         let data = request.body;
