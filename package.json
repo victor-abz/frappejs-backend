@@ -1,7 +1,7 @@
 {
   "name": "frappe-backend",
-  "version": "1.1.10",
-  "description": "",
+  "version": "1.1.11",
+  "description": "Frappe backend is a meta-data driven backend framework that enables rapid application development of Node.js REST API.",
   "main": "index.js",
   "bin": {
     "frp-cmd": "cli.js"
