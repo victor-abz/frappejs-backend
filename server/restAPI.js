@@ -32,6 +32,19 @@ module.exports = {
       })
     );
 
+    // get single
+    app.get(
+      '/api/single/:doctype',
+      frappe.asyncHandler(async function (request, response) {
+        let doc = await frappe.getSingle(request.params.doctype);
+        return response.json({
+          message: `${request.params.doctype} retrieved successfully`,
+          success: true,
+          data: doc.getValidDict(),
+        });
+      })
+    );
+
     // create
     app.post(
       '/api/resource/:doctype',
@@ -126,7 +139,7 @@ module.exports = {
           request.params.name
         );
         return response.json({
-          message: `${name} retried successfully`,
+          message: `${request.params.name} retrieved successfully`,
           success: true,
           data: doc.getValidDict(),
         });
