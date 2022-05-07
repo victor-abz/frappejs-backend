@@ -21,7 +21,6 @@ class PostgresDatabase extends Database {
   }
 
   async addForeignKeys(doctype, newForeignKeys) {
-    console.log({ newForeignKeys });
     // Check foreign Table Exists. If not create it.
     newForeignKeys.forEach(async (fk) => {
       const foreignTableExists = await this.knex.schema.hasTable(fk.target);

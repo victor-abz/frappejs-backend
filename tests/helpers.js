@@ -5,7 +5,6 @@ const PG = require('frappe-backend/backends/postgres');
 
 module.exports = {
   async initSqlite({ dbPath = '_test.db', models } = {}) {
-    console.log('first');
     server.init();
     if (models) {
       frappe.registerModels(models, 'server');

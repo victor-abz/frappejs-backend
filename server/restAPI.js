@@ -16,7 +16,7 @@ module.exports = {
 
         let data = await frappe.db.getAll({
           doctype: request.params.doctype,
-          fields: request.query.fields,
+          fields: request.query.fields || ['*'],
           filters: request.query.filters,
           start: request.query.start || 0,
           limit: request.query.limit || 20,

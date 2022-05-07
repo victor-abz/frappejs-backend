@@ -82,6 +82,7 @@ module.exports = {
     frappe.app = app;
     frappe.server = server;
 
+    frappe.SystemSettings = await frappe.getSingle('SystemSettings');
     // Handle Not found routes
     app.use(function (req, res, next) {
       res.status(404);

@@ -85,7 +85,6 @@ module.exports = class Observable {
   }
 
   bindSocketServer(socket) {
-    console.log('????????? SOCKKET ?????????');
     // also send events with sockets
     this._observable.socketServer = socket;
   }
