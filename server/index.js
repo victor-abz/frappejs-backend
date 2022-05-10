@@ -110,5 +110,6 @@ module.exports = {
     frappe.db = await new backends[backend](connectionParams);
     await frappe.db.connect();
     await frappe.db.migrate();
+    await frappe.db.executePostDbConnect();
   },
 };

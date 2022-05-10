@@ -1,14 +1,15 @@
-// const frappe = require('frappe-backend');
+const frappe = require('frappe-backend');
 const Database = require('./database');
 
 class PostgresDatabase extends Database {
-  constructor({ db_name, username, password, host }) {
+  constructor({ db_name, username, password, host, knexParams = {} }) {
     super();
     this.db_name = db_name;
     this.username = username;
     this.password = password;
     this.host = host;
     this.connectionParams = {
+      ...knexParams,
       client: 'pg',
       connection: {
         host: this.host,
@@ -23,13 +24,11 @@ class PostgresDatabase extends Database {
   async addForeignKeys(doctype, newForeignKeys) {
     // Check foreign Table Exists. If not create it.
     newForeignKeys.forEach(async (fk) => {
-      const foreignTableExists = await this.knex.schema.hasTable(fk.target);
-      if (!foreignTableExists) {
-        await this.createTable(fk.target);
-      }
+      let meta = frappe.getMeta(fk.target);
+      this.createForeignTableIfNotExist(meta.getBaseDocType());
     });
 
-    // Disble FOregn key on table with Postgres Query
+    // Disble Foreign key on table with Postgres Query
     await this.sql(`ALTER TABLE "${doctype}" DISABLE TRIGGER user`);
     // await this.sql('BEGIN TRANSACTION');
 
@@ -109,21 +108,20 @@ class PostgresDatabase extends Database {
     };
   }
 
-  // getError(err) {
-  // 	let errorType = frappe.errors.DatabaseError;
-  // 	if (err.message.includes('FOREIGN KEY')) {
-  // 		errorType = frappe.errors.LinkValidationError;
-  // 	}
-  // 	if (err.message.includes('SQLITE_ERROR: cannot commit')) {
-  // 		errorType = frappe.errors.CannotCommitError;
-  // 	}
-  // 	if (
-  // 		err.message.includes('SQLITE_CONSTRAINT: UNIQUE constraint failed:')
-  // 	) {
-  // 		errorType = frappe.errors.DuplicateEntryError;
-  // 	}
-  // 	return errorType;
-  // }
+  //   getError(err) {
+  //     console.log('>>>>>>>>>>>>', err.message);
+  //     let errorType = frappe.errors.DatabaseError;
+  //     if (err.message.includes('FOREIGN KEY')) {
+  //       errorType = frappe.errors.LinkValidationError;
+  //     }
+  //     if (err.message.includes('SQLITE_ERROR: cannot commit')) {
+  //       errorType = frappe.errors.CannotCommitError;
+  //     }
+  //     if (err.message.includes('SQLITE_CONSTRAINT: UNIQUE constraint failed:')) {
+  //       errorType = frappe.errors.DuplicateEntryError;
+  //     }
+  //     return errorType;
+  //   }
 }
 
 module.exports = PostgresDatabase;

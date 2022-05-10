@@ -21,7 +21,6 @@ module.exports = class Database extends Observable {
     this.knex.on('query-error', (error) => {
       error.type = this.getError(error);
     });
-    this.executePostDbConnect();
   }
 
   close() {
@@ -146,7 +145,7 @@ module.exports = class Database extends Observable {
       });
   }
 
-  buildColumnForTable(table, field) {
+  async buildColumnForTable(table, field) {
     let columnType = this.getColumnType(field);
     if (!columnType) {
       // In case columnType is "Table"
@@ -177,12 +176,21 @@ module.exports = class Database extends Observable {
     // link
     if (field.fieldtype === 'Link' && field.target) {
       let meta = frappe.getMeta(field.target);
+      console.log(meta.getBaseDocType());
+      await this.createForeignTableIfNotExist(meta.getBaseDocType());
       table
         .foreign(field.fieldname)
         .references('name')
         .inTable(meta.getBaseDocType())
         .onUpdate('CASCADE')
         .onDelete('RESTRICT');
+    }
+  }
+
+  async createForeignTableIfNotExist(doctype) {
+    const foreignTableExists = await this.knex.schema.hasTable(doctype);
+    if (!foreignTableExists) {
+      await this.createTable(doctype);
     }
   }
 
