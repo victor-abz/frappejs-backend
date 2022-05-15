@@ -176,7 +176,6 @@ module.exports = class Database extends Observable {
     // link
     if (field.fieldtype === 'Link' && field.target) {
       let meta = frappe.getMeta(field.target);
-      console.log(meta.getBaseDocType());
       await this.createForeignTableIfNotExist(meta.getBaseDocType());
       table
         .foreign(field.fieldname)
