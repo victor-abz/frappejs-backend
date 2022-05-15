@@ -692,7 +692,6 @@ module.exports = class BaseDocument extends Observable {
     }
     const precision =
       frappe.SystemSettings.internalPrecision ?? DEFAULT_INTERNAL_PRECISION;
-    console.log('>>>>>>???', value);
     return frappe.pesa(value).clip(precision).float;
   }
 

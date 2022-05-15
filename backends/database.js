@@ -873,7 +873,6 @@ module.exports = class Database extends Observable {
     if (typeof display === 'string') {
       display = parseInt(display);
     }
-    console.log(precision, display);
 
     frappe.pesa = getMoneyMaker({
       currency,

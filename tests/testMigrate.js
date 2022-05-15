@@ -56,14 +56,16 @@ describe('Database Migrate', () => {
       .where('type', 'table')
       .orderBy('name')
       .pluck('name');
-
     // check if tables were created
     assert.deepEqual(['Gender', 'Person'], tables);
 
     let fields = await frappe.db.sql('PRAGMA table_info(??)', 'Person');
     // check if standard fields and model fields were created
     assert.equal(fields.length, 8);
-    assert.equal(fields.find((d) => d.name === 'age').type, 'integer');
+    assert.equal(
+      fields.find((d) => d.name === 'age').type?.toLowerCase(),
+      'integer'
+    );
 
     let foreignKeys = await frappe.db.sql(
       'PRAGMA foreign_key_list(??)',

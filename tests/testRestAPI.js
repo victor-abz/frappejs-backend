@@ -9,6 +9,36 @@ const models = require('frappe-backend/models');
 const common = require('frappe-backend/common');
 
 // create a copy of frappe
+const ToDo = {
+  name: 'ToDo',
+  label: 'To Do',
+  naming: 'autoincrement',
+  isSingle: 0,
+  keywordFields: ['subject', 'description'],
+  titleField: 'subject',
+  fields: [
+    {
+      fieldname: 'subject',
+      label: 'Subject',
+      placeholder: 'Subject',
+      fieldtype: 'Data',
+      required: 1,
+    },
+    {
+      fieldname: 'status',
+      label: 'Status',
+      fieldtype: 'Select',
+      options: ['Open', 'Closed'],
+      default: 'Open',
+      required: 1,
+    },
+    {
+      fieldname: 'description',
+      label: 'Description',
+      fieldtype: 'Text',
+    },
+  ],
+};
 
 var test_server;
 
@@ -16,13 +46,8 @@ describe('REST', () => {
   before(async function () {
     test_server = spawn('node', ['tests/test_server.js'], { stdio: 'inherit' });
 
-    await frappe.init();
-    await frappe.registerLibs(common);
-    await frappe.registerModels(models);
-    await frappe.login('Administrator');
-
-    frappe.db = await new HTTPClient({ server: 'localhost:8000' });
-    frappe.fetch = fetch;
+    // frappe.db = await new HTTPClient({ server: 'localhost:8000' });
+    // frappe.fetch = fetch;
 
     // wait for server to start
     return await utils.sleep(2);
@@ -38,7 +63,6 @@ describe('REST', () => {
     await doc.insert();
 
     let doc1 = await frappe.getDoc('ToDo', doc.name);
-
     assert.equal(doc.subject, doc1.subject);
     assert.equal(doc1.status, 'Open');
   });

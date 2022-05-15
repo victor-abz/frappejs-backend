@@ -23,7 +23,6 @@ program
   //   .option('-b, --baseDir <baseDir>', 'Base Directory')
   //   .option('-e, --useEs6', 'Should Generate ES6 models')
   .action((modelName, options) => {
-    console.log(modelName);
     boilerplate.make_model_files(modelName);
   });
 
