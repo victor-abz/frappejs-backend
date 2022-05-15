@@ -59,11 +59,27 @@ module.exports = {
         );
 
         let childFieldname = request.params.childFieldname;
-        if (!request.body[childFieldname])
+        if (!childFieldname)
           throw {
             message: `Body should contain array named '${childFieldname}'`,
             statusCode: 422,
           };
+
+        let fields = frappe
+          .getMeta(request.params.doctype)
+          .getValidFields({ withChildren: true });
+        console.log(fields);
+        //  fields is a list of object like  [{ fieldname: 'owner', fieldtype: 'Data', required: 1 }]
+        // Check if childFieldname fieldName exist in the fields list
+        let childField = fields.find(
+          (field) => field.fieldname === childFieldname
+        );
+        if (!childField || childField?.fieldtype !== 'Table')
+          throw {
+            message: `Field ${childFieldname} does not exist in ${request.params.doctype}`,
+            statusCode: 422,
+          };
+
         //   return res.status(422).json({
         //     message: `Body should contain array name as ${childFieldname}`,
         //     success: false,
