@@ -49,6 +49,42 @@ module.exports = {
       })
     );
 
+    // Add child to parent
+    app.post(
+      '/api/resource/:doctype/:name/:childFieldname',
+      frappe.asyncHandler(async function (request, response) {
+        let doc = await frappe.getDoc(
+          request.params.doctype,
+          request.params.name
+        );
+
+        let childFieldname = request.params.childFieldname;
+        if (!request.body[childFieldname])
+          throw {
+            message: `Body should contain array named '${childFieldname}'`,
+            statusCode: 422,
+          };
+        //   return res.status(422).json({
+        //     message: `Body should contain array name as ${childFieldname}`,
+        //     success: false,
+        //     data: [],
+        //   });
+        let data = request.body[childFieldname];
+        // Asyncronously map through data and add members to project
+        data.map((d) => {
+          doc.append(childFieldname, d);
+        });
+        await doc.update();
+        await frappe.db.commit();
+
+        return response.json({
+          message: `Succesfully added`,
+          success: true,
+          data: doc.getValidDict(),
+        });
+      })
+    );
+
     // update
     app.put(
       '/api/resource/:doctype/:name',

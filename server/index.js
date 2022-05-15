@@ -1,7 +1,8 @@
 require('dotenv').config();
 const backends = {};
 backends.sqlite = require('frappe-backend/backends/sqlite');
-backends.mysql = require('frappe-backend/backends/mysql');
+// backends.mysql = require('frappe-backend/backends/mysql');
+// backends.http = require('frappe-backend/backends/http');
 backends.pg = require('frappe-backend/backends/postgres');
 // const path = require('path');
 const express = require('express');
