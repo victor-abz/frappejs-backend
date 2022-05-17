@@ -22,36 +22,51 @@ class PostgresDatabase extends Database {
   }
 
   async addForeignKeys(doctype, newForeignKeys) {
-    // Check foreign Table Exists. If not create it.
-    newForeignKeys.forEach(async (fk) => {
-      let meta = frappe.getMeta(fk.target);
-      this.createForeignTableIfNotExist(meta.getBaseDocType());
+    this.knex.schema.table(doctype, async (table) => {
+      for (let field of newForeignKeys) {
+        let meta = frappe.getMeta(field.target);
+        await this.createForeignTableIfNotExist(meta.getBaseDocType());
+        table
+          .foreign(field.fieldname)
+          .references('name')
+          .inTable(meta.getBaseDocType())
+          .onUpdate('CASCADE')
+          .onDelete('RESTRICT');
+      }
     });
-
-    // Disble Foreign key on table with Postgres Query
-    await this.sql(`ALTER TABLE "${doctype}" DISABLE TRIGGER user`);
-    // await this.sql('BEGIN TRANSACTION');
-
-    const tempName = 'TEMP' + doctype;
-
-    // create temp table
-    await this.knex.schema.dropTableIfExists(tempName);
-    await this.createTable(doctype, tempName);
-
-    // copy from old to new table
-    await this.knex(tempName).insert(this.knex.select().from(doctype));
-
-    // drop old table
-    await this.knex.schema.dropTable(doctype);
-
-    // rename new table
-    await this.createTable(doctype);
-    await this.knex(doctype).insert(this.knex.select().from(tempName));
-    await this.knex.schema.dropTableIfExists(tempName);
-
-    await this.sql('COMMIT');
-    await this.sql(`ALTER TABLE "${doctype}" ENABLE TRIGGER user`);
   }
+
+  //   async addForeignKeys(doctype, newForeignKeys) {
+  //     // Check foreign Table Exists. If not create it.
+  //     newForeignKeys.forEach(async (fk) => {
+  //       let meta = frappe.getMeta(fk.target);
+  //       this.createForeignTableIfNotExist(meta.getBaseDocType());
+  //     });
+
+  //     // Disble Foreign key on table with Postgres Query
+  //     await this.sql(`ALTER TABLE "${doctype}" DISABLE TRIGGER user`);
+  //     // await this.sql('BEGIN TRANSACTION');
+
+  //     const tempName = 'TEMP' + doctype;
+
+  //     // create temp table
+  //     await this.knex.schema.dropTableIfExists(tempName);
+  //     await this.createTable(doctype, tempName);
+
+  //     // copy from old to new table
+  //     await this.knex(tempName).insert(this.knex.select().from(doctype));
+
+  //     // drop old table
+  //     await this.knex.schema.dropTable(doctype);
+
+  //     // rename new table
+  //     await this.createTable(doctype);
+  //     await this.knex(doctype).insert(this.knex.select().from(tempName));
+  //     await this.knex.schema.dropTableIfExists(tempName);
+
+  //     await this.sql('COMMIT');
+  //     await this.sql(`ALTER TABLE "${doctype}" ENABLE TRIGGER user`);
+  //   }
 
   removeColumns() {
     // pass
