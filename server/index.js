@@ -60,6 +60,25 @@ module.exports = {
     io.on('connection', function (socket) {
       frappe.db.bindSocketServer(socket);
     });
+    // // get server healthy
+    // app.get('/', (req, res) => {
+    //   res.send({
+    //     message: `Server Up and Running`,
+    //     success: true,
+    //   });
+    // });
+
+    // get server healthy
+    app.get(
+      '/',
+      frappe.asyncHandler(async function (request, response) {
+        return response.json({
+          message: `Server Up and Running`,
+          success: true,
+          data: null,
+        });
+      })
+    );
 
     // global middlewares
     app.use(function (req, res, next) {
