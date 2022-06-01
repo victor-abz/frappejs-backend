@@ -47,8 +47,8 @@ module.exports = {
     });
 
     // app
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.json({ limit: '200mb' }));
+    app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }));
 
     app.use(morgan('tiny'));
 

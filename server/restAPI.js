@@ -68,7 +68,6 @@ module.exports = {
         let fields = frappe
           .getMeta(request.params.doctype)
           .getValidFields({ withChildren: true });
-        console.log(fields);
         //  fields is a list of object like  [{ fieldname: 'owner', fieldtype: 'Data', required: 1 }]
         // Check if childFieldname fieldName exist in the fields list
         let childField = fields.find(
@@ -86,6 +85,7 @@ module.exports = {
         //     data: [],
         //   });
         let data = request.body[childFieldname];
+        // console.log(data);
         // Asyncronously map through data and add members to project
         data.map((d) => {
           doc.append(childFieldname, d);
@@ -228,7 +228,7 @@ module.exports = {
           await doc.delete();
         }
         return response.json({
-          message: `Values retrieved successfully`,
+          message: `Values deleted successfully`,
           success: true,
         });
       })
