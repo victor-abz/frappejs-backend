@@ -49,6 +49,27 @@ module.exports = {
       })
     );
 
+    // create mulitple
+    app.post(
+      '/api/resources/:doctype',
+      frappe.asyncHandler(async function (request, response) {
+        let data = request.body;
+        let createdItems = [];
+        for (let key of data) {
+          key.doctype = request.params.doctype;
+          let doc = frappe.newDoc(key);
+          await doc.insert();
+          await frappe.db.commit();
+          createdItems.push(doc.getValidDict());
+        }
+        return response.json({
+          message: `Multiple ${request.params.doctype} created successfully`,
+          success: true,
+          data: createdItems,
+        });
+      })
+    );
+
     // Add child to parent
     app.post(
       '/api/resource/:doctype/:name/:childFieldname',
