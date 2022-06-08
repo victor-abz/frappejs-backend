@@ -129,8 +129,10 @@ module.exports = {
         let data = request.body;
         let doc = await frappe.getDoc(
           request.params.doctype,
-          request.params.name
+          request.params.name,
+          { skipDocumentCache: true }
         );
+        console.log(doc);
         Object.assign(doc, data);
         await doc.update();
         await frappe.db.commit();
@@ -196,7 +198,8 @@ module.exports = {
       frappe.asyncHandler(async function (request, response) {
         let doc = await frappe.getDoc(
           request.params.doctype,
-          request.params.name
+          request.params.name,
+          { skipDocumentCache: true }
         );
         return response.json({
           message: `${request.params.name} retrieved successfully`,
