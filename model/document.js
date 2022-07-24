@@ -9,6 +9,7 @@ module.exports = class BaseDocument extends Observable {
     super();
     this.fetchValuesCache = {};
     this.flags = {};
+    this.doctype = data.doctype;
     this.setup();
     this.setValues(data);
   }
